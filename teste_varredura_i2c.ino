@@ -29,7 +29,9 @@ void varredura() {
     //   2 = NACK no envio do endereco (ninguem respondeu)
     //   3 = NACK no envio dos dados
     //   4 = outro erro
-
+    Serial.print(address);
+    Serial.print(" ");
+    Serial.println(error);
     if (error == 0) {
       Serial.print("ACHOU 0x");
       if (address < 16) Serial.print('0');
@@ -46,3 +48,6 @@ void varredura() {
   Serial.println(nDevices);
 }
 
+
+void loop() {
+}
