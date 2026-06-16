@@ -29,10 +29,11 @@ nome = ttk.Entry(formulario, width=28)
 nome.grid(row=1, column=1, pady=4)
 
 
-ttk.Label(formulario, text="Baud padrão*:").grid(row=2, column=0, sticky="e", padx=5, pady=4)
-baud = ttk.Combobox(formulario, width=25,
+ttk.Label(formulario, text="Baud padrão:").grid(row=2, column=0, sticky="e", padx=5, pady=4)
+baud = ttk.Combobox(formulario, width=25, state="readonly",
                     values=["0","300","600","1200", "2400", "4800", "9600", "19200",
                             "38400", "57600", "115200", "230400"])
+baud.set("9600")
 baud.grid(row=2, column=1, pady=4)
 
 
@@ -91,7 +92,7 @@ nivel.grid(row=11, column=1, pady=4)
 
 
 if indice is not None:
-    with open("componentes_uart.json", "r", encoding="utf-8") as f:
+    with open("UART/componentes_uart.json", "r", encoding="utf-8") as f:
         comps = json.load(f)
     comp = comps[indice]
     nome.insert(0, comp["nome"])
@@ -131,20 +132,20 @@ def salvar():
 
     aviso = messagebox.askyesno("Confirmar", "Salvar componente?")
     if aviso:
-        with open("componentes_uart.json", "r", encoding="utf-8") as f:
+        with open("UART/componentes_uart.json", "r", encoding="utf-8") as f:
             componentes = json.load(f)
         if indice is not None:
             componentes[indice] = dados
         else:
             componentes.append(dados)
-        with open("componentes_uart.json", "w", encoding="utf-8") as f:
+        with open("UART/componentes_uart.json", "w", encoding="utf-8") as f:
             json.dump(componentes, f, ensure_ascii=False, indent=2)
-        subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+        subprocess.Popen([sys.executable, "UART/lista_comps_uart.py"])
         janela.destroy()
 
 
 def voltar():
-    subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+    subprocess.Popen([sys.executable, "UART/lista_comps_uart.py"])
     janela.destroy()
 
 
