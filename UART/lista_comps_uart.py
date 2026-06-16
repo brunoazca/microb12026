@@ -5,11 +5,11 @@ import sys
 
 janela = tk.Tk()
 janela.title("Seleção de Componentes UART")
-janela.geometry("420x480")
+janela.geometry("420x520")
 
 import json
 
-with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
+with open("componentes_uart.json", "r", encoding="utf-8") as f:
     dados = json.load(f)
 
 componentes = []
@@ -26,32 +26,29 @@ ttk.Label(text="Componentes UART",
 botoes = ttk.Frame(janela)
 botoes.pack(pady=5)
 
-global selecionados
-selecionados = []
-
-def selecionar():
-    global selecionados
+def selecionar(event):
     selecionados = lista.curselection()
-    if not selecionados:
-        messagebox.showwarning("Nenhum selecionado", "Selecione pelo menos um componente.")
-        return
-    nomes=[]
+    txt = "Selecionado(s): "
     for i in selecionados:
-        nomes.append(lista.get(i))
-    label.config(text="Selecionado(s): " + ", ".join(nomes))
+        nome = lista.get(i)
+        txt += nome + ",\n"
+    
+    
+    label.config(text=txt)
+    
 
 def cadastrar():
-    subprocess.Popen([sys.executable, "UART\\cadastro_uart.py"])
+    subprocess.Popen([sys.executable, "cadastro&edicao_uart.py"])
     janela.destroy()
 
 def apagar():
-    global selecionados
+    selecionados = lista.curselection()
     if len(selecionados) == 0:
         messagebox.showwarning("Seleção inválida", "Selecione pelo menos um componente para apagar.")
         return
     resposta = messagebox.askyesno("Confirmar", "Você realmente quer apagar?")
     if resposta:
-        with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
+        with open("componentes_uart.json", "r", encoding="utf-8") as f:
             comps = json.load(f)
         nomes = []
         for i in selecionados: 
@@ -59,28 +56,29 @@ def apagar():
         for i in sorted(selecionados, reverse=True):
             lista.delete(i)
             del comps[i]
-        with open("UART\\componentes_uart.json", "w", encoding="utf-8") as f:
+        with open("componentes_uart.json", "w", encoding="utf-8") as f:
             json.dump(comps, f, ensure_ascii=False, indent=2)
-        apagados.config(text="Apagados: " + ", ".join(nomes))
+        apagados.config(text="Apagado(s): " + ", ".join(nomes))
         selecionados = []
 
 
 def editar():
-    global selecionados
+    selecionados = lista.curselection()
     if len(selecionados) != 1:
         messagebox.showwarning("Seleção inválida", "Selecione exatamente um componente para editar.")
         return
-    subprocess.Popen([sys.executable, "UART\\edicao_uart.py", str(selecionados[0])])
+    subprocess.Popen([sys.executable, "cadastro&edicao_uart.py", str(selecionados[0])])
     janela.destroy()
     
 
 tk.Button(botoes, text="Cadastrar", command=cadastrar).grid(row=0, column=0, padx=5)
-tk.Button(botoes, text="Selecionar", command=selecionar).grid(row=0, column=1, padx=5)
-tk.Button(botoes, text="Apagar", command=apagar).grid(row=0, column=3, padx=5)
-tk.Button(botoes, text="Editar", command=editar).grid(row=0, column=2, padx=5)
+tk.Button(botoes, text="Apagar", command=apagar).grid(row=0, column=2, padx=5)
+tk.Button(botoes, text="Editar", command=editar).grid(row=0, column=1, padx=5)
+
 
 label = tk.Label(janela, text="")
 label.pack()
+
 
 apagados = tk.Label(janela, text="")
 apagados.pack()
@@ -90,8 +88,10 @@ for item in componentes:
     lista.insert(tk.END, item)
 lista.pack(pady=10, fill=tk.BOTH, expand=True)
 
-def confirmar():
-    pass
+
+
+lista.bind('<<ListboxSelect>>', selecionar)
+
 
 def sair():
     #(subprocess.Popen([sys.executable, ".py"]))
