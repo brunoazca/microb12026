@@ -9,7 +9,7 @@ janela.geometry("420x480")
 
 import json
 
-with open("componentes_uart.json", "r", encoding="utf-8") as f:
+with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
     dados = json.load(f)
 
 componentes = []
@@ -41,7 +41,7 @@ def selecionar():
     label.config(text="Selecionado(s): " + ", ".join(nomes))
 
 def cadastrar():
-    subprocess.Popen([sys.executable, "cadastro_uart.py"])
+    subprocess.Popen([sys.executable, "UART\\cadastro_uart.py"])
     janela.destroy()
 
 def apagar():
@@ -51,7 +51,7 @@ def apagar():
         return
     resposta = messagebox.askyesno("Confirmar", "Você realmente quer apagar?")
     if resposta:
-        with open("componentes_uart.json", "r", encoding="utf-8") as f:
+        with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
             comps = json.load(f)
         nomes = []
         for i in selecionados: 
@@ -59,7 +59,7 @@ def apagar():
         for i in sorted(selecionados, reverse=True):
             lista.delete(i)
             del comps[i]
-        with open("componentes_uart.json", "w", encoding="utf-8") as f:
+        with open("UART\\componentes_uart.json", "w", encoding="utf-8") as f:
             json.dump(comps, f, ensure_ascii=False, indent=2)
         apagados.config(text="Apagados: " + ", ".join(nomes))
         selecionados = []
@@ -70,7 +70,7 @@ def editar():
     if len(selecionados) != 1:
         messagebox.showwarning("Seleção inválida", "Selecione exatamente um componente para editar.")
         return
-    subprocess.Popen([sys.executable, "edicao_uart.py", str(selecionados[0])])
+    subprocess.Popen([sys.executable, "UART\\edicao_uart.py", str(selecionados[0])])
     janela.destroy()
     
 

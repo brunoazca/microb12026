@@ -105,10 +105,10 @@ def salvar():
         return
     aviso = messagebox.askyesno("Confirmar", "Salvar componente?")
     if aviso:
-        with open("componentes_uart.json", "r", encoding="utf-8") as f:
+        with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
                 componentes = json.load(f)
         componentes.append(dados)
-        with open("componentes_uart.json", "w", encoding="utf-8") as f:
+        with open("UART\\componentes_uart.json", "w", encoding="utf-8") as f:
                 json.dump(componentes, f)
         subprocess.Popen([sys.executable, "lista_comps_uart.py"])
         janela.destroy()
@@ -116,7 +116,7 @@ def salvar():
 
 
 def voltar():
-        subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+        subprocess.Popen([sys.executable, "UART\\lista_comps_uart.py"])
         janela.destroy()
 
 ttk.Button(formulario, text="Salvar", command=salvar).grid(row=12, column=1, pady=15)

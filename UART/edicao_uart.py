@@ -85,7 +85,7 @@ nivel.grid(row=11, column=1, pady=4)
 
 
 if indice is not None:
-    with open("componentes_uart.json", "r", encoding="utf-8") as f:
+    with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
         comps = json.load(f)
     comp = comps[indice]
     nome.insert(0, comp["nome"])
@@ -125,20 +125,20 @@ def salvar():
 
     aviso = messagebox.askyesno("Confirmar", "Salvar componente?")
     if aviso:
-        with open("componentes_uart.json", "r", encoding="utf-8") as f:
+        with open("UART\\componentes_uart.json", "r", encoding="utf-8") as f:
             componentes = json.load(f)
         if indice is not None:
             componentes[indice] = dados
         else:
             componentes.append(dados)
-        with open("componentes_uart.json", "w", encoding="utf-8") as f:
+        with open("UART\\componentes_uart.json", "w", encoding="utf-8") as f:
             json.dump(componentes, f, ensure_ascii=False, indent=2)
-        subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+        subprocess.Popen([sys.executable, "UART\\lista_comps_uart.py"])
         janela.destroy()
 
 
 def voltar():
-    subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+    subprocess.Popen([sys.executable, "UART\\lista_comps_uart.py"])
     janela.destroy()
 
 
