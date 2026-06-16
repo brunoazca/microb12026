@@ -45,13 +45,24 @@ def cadastrar():
     janela.destroy()
 
 def apagar():
+    global selecionados
+    if len(selecionados) == 0:
+        messagebox.showwarning("Seleção inválida", "Selecione pelo menos um componente para apagar.")
+        return
     resposta = messagebox.askyesno("Confirmar", "Você realmente quer apagar?")
     if resposta:
-        global selecionados
-        lista_apagados = []
-        for i in selecionados:
-            lista_apagados.append(i)
-        apagados.config(text="Apagados: " + ", ".join(lista_apagados))
+        with open("componentes_uart.json", "r", encoding="utf-8") as f:
+            comps = json.load(f)
+        nomes = []
+        for i in selecionados: 
+            nomes.append(lista.get(i))
+        for i in sorted(selecionados, reverse=True):
+            lista.delete(i)
+            del comps[i]
+        with open("componentes_uart.json", "w", encoding="utf-8") as f:
+            json.dump(comps, f, ensure_ascii=False, indent=2)
+        apagados.config(text="Apagados: " + ", ".join(nomes))
+        selecionados = []
 
 
 def editar():
