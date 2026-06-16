@@ -4,17 +4,23 @@ import json
 import subprocess
 import sys
 
-indice = int(sys.argv[1]) if len(sys.argv) > 1 else None
+
+if len(sys.argv) > 1 :
+    indice = int(sys.argv[1])
+else: 
+    indice = None
+
+
 
 janela = tk.Tk()
-janela.title("Edição de Componente UART")
-janela.geometry("420x480")
+janela.title("Cadastro de Componente UART")
+janela.geometry("420x520")
 
 formulario = ttk.Frame(janela)
 formulario.pack(padx=20, pady=20)
 
 
-ttk.Label(formulario, text="Edição de Componentes UART",
+ttk.Label(formulario, text="Cadastro de Componentes UART",
           font=("Segoe UI", 16, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 15))
 
 
@@ -23,10 +29,11 @@ nome = ttk.Entry(formulario, width=28)
 nome.grid(row=1, column=1, pady=4)
 
 
-ttk.Label(formulario, text="Baud padrão*:").grid(row=2, column=0, sticky="e", padx=5, pady=4)
-baud = ttk.Combobox(formulario, width=25,
+ttk.Label(formulario, text="Baud padrão:").grid(row=2, column=0, sticky="e", padx=5, pady=4)
+baud = ttk.Combobox(formulario, width=25, state="readonly",
                     values=["0","300","600","1200", "2400", "4800", "9600", "19200",
                             "38400", "57600", "115200", "230400"])
+baud.set("9600")
 baud.grid(row=2, column=1, pady=4)
 
 
@@ -85,7 +92,7 @@ nivel.grid(row=11, column=1, pady=4)
 
 
 if indice is not None:
-    with open("componentes_uart.json", "r", encoding="utf-8") as f:
+    with open("UART/componentes_uart.json", "r", encoding="utf-8") as f:
         comps = json.load(f)
     comp = comps[indice]
     nome.insert(0, comp["nome"])
@@ -125,20 +132,20 @@ def salvar():
 
     aviso = messagebox.askyesno("Confirmar", "Salvar componente?")
     if aviso:
-        with open("componentes_uart.json", "r", encoding="utf-8") as f:
+        with open("UART/componentes_uart.json", "r", encoding="utf-8") as f:
             componentes = json.load(f)
         if indice is not None:
             componentes[indice] = dados
         else:
             componentes.append(dados)
-        with open("componentes_uart.json", "w", encoding="utf-8") as f:
+        with open("UART/componentes_uart.json", "w", encoding="utf-8") as f:
             json.dump(componentes, f, ensure_ascii=False, indent=2)
-        subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+        subprocess.Popen([sys.executable, "UART/lista_comps_uart.py"])
         janela.destroy()
 
 
 def voltar():
-    subprocess.Popen([sys.executable, "lista_comps_uart.py"])
+    subprocess.Popen([sys.executable, "UART/lista_comps_uart.py"])
     janela.destroy()
 
 
