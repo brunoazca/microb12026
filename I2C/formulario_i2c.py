@@ -1,9 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import json
-import queue
-
-import serial_i2c
 
 TIPOS = ["acelerometro/IMU", "magnetometro", "temperatura/umidade", "pressao",
          "luz", "distancia/ToF", "ADC/DAC", "PWM", "expansor IO", "display",
@@ -30,11 +27,13 @@ def endereco_valido(texto):
     return None
 
 
-def abrir_formulario(parent, indice=None, ao_salvar=None):
+def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None):
     """Abre o formulário de componente I2C como subjanela (Toplevel) de `parent`.
 
     - `indice is None`  -> modo cadastro: o componente é adicionado ao final.
     - `indice` inteiro  -> modo edição: carrega esse componente e o substitui.
+    - `endereco_inicial` -> no cadastro, já preenche o endereço (ex.: o que foi
+      detectado pelo Arduino na tela principal).
 
     `ao_salvar` (opcional) é chamado depois de gravar com sucesso, para a janela
     principal atualizar sua lista sem reabrir nada.
@@ -43,16 +42,11 @@ def abrir_formulario(parent, indice=None, ao_salvar=None):
 
     top = tk.Toplevel(parent)
     top.title("Edição de Componente I2C" if edicao else "Cadastro de Componente I2C")
-    top.geometry("820x540")
+    top.geometry("440x520")
     top.transient(parent)
 
-    container = ttk.Frame(top)
-    container.pack(fill="both", expand=True)
-
-    formulario = ttk.Frame(container)
-    formulario.pack(side="left", padx=20, pady=20, anchor="n")
-
-    ttk.Separator(container, orient="vertical").pack(side="left", fill="y", pady=20)
+    formulario = ttk.Frame(top)
+    formulario.pack(padx=20, pady=20)
 
     ttk.Label(formulario,
               text="Edição de Componentes I2C" if edicao else "Cadastro de Componentes I2C",
@@ -98,7 +92,7 @@ def abrir_formulario(parent, indice=None, ao_salvar=None):
     obs = ttk.Entry(formulario, width=28)
     obs.grid(row=9, column=1, pady=4)
 
-    # ----- LOAD: preenche os campos no modo edição --------------------------
+    # ----- LOAD: edição carrega o componente; cadastro usa o endereço dado --
     if edicao:
         with open(ARQUIVO, "r", encoding="utf-8") as f:
             comp = json.load(f)[indice]
@@ -111,6 +105,8 @@ def abrir_formulario(parent, indice=None, ao_salvar=None):
         velocidade.set(str(comp.get("velocidade", "100000")))
         nivel.set(comp.get("nivel_logico", "3,3 V"))
         obs.insert(0, comp.get("obs", ""))
+    elif endereco_inicial:
+        endereco.set(endereco_inicial)
 
     def salvar():
         if not nome.get().strip():
@@ -154,163 +150,12 @@ def abrir_formulario(parent, indice=None, ao_salvar=None):
         with open(ARQUIVO, "w", encoding="utf-8") as f:
             json.dump(componentes, f, ensure_ascii=False, indent=2)
 
-        fechar()
+        top.destroy()
         if ao_salvar:
             ao_salvar()
 
     ttk.Button(formulario, text="Salvar", command=salvar).grid(row=10, column=1, pady=15)
-    ttk.Button(formulario, text="Voltar", command=lambda: fechar()).grid(row=10, column=0, pady=15)
-
-    # ----------------------------------------------------------------------
-    # Painel lateral: dispositivo I2C conectado (lido do Arduino via serial)
-    # ----------------------------------------------------------------------
-
-    painel = ttk.Frame(container)
-    painel.pack(side="left", fill="both", expand=True, padx=20, pady=20, anchor="n")
-
-    ttk.Label(painel, text="Dispositivo conectado",
-              font=("Segoe UI", 14, "bold")).pack(anchor="w", pady=(0, 10))
-
-    linha_porta = ttk.Frame(painel)
-    linha_porta.pack(fill="x", pady=(0, 6))
-    ttk.Label(linha_porta, text="Porta:").pack(side="left")
-    porta_sel = ttk.Combobox(linha_porta, width=20, state="readonly")
-    porta_sel.pack(side="left", padx=4)
-
-    status_lbl = ttk.Label(painel, text="", foreground="gray")
-    status_lbl.pack(anchor="w", pady=(0, 8))
-
-    info_box = tk.Text(painel, width=42, height=14, wrap="word", state="disabled",
-                       font=("Segoe UI", 10))
-    info_box.pack(fill="both", expand=True)
-
-    usar_btn = ttk.Button(painel, text="Usar este endereço", state="disabled")
-    usar_btn.pack(pady=10)
-
-    # Estado da varredura serial
-    fila_eventos = queue.Queue()
-    conectados = {}          # endereco -> nome provavel vindo do Arduino
-    leitor = {"thread": None}
-    endereco_atual = {"valor": None}
-    after_id = {"valor": None}
-
-    def carregar_base():
-        try:
-            with open(ARQUIVO, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (OSError, ValueError):
-            return []
-
-    def info_registrada(addr):
-        return [c for c in carregar_base() if c.get("endereco", "").lower() == addr.lower()]
-
-    def escrever_info(texto):
-        info_box.config(state="normal")
-        info_box.delete("1.0", "end")
-        info_box.insert("1.0", texto)
-        info_box.config(state="disabled")
-
-    def mostrar_dispositivo(addr):
-        endereco_atual["valor"] = addr
-        if addr is None:
-            escrever_info("Nenhum dispositivo detectado.\n\n"
-                          "Conecte um componente I2C ao Arduino;\n"
-                          "ele aparece aqui automaticamente.")
-            usar_btn.config(state="disabled")
-            return
-
-        linhas = ["Endereço: " + addr,
-                  "Provável: " + conectados.get(addr, "?"), ""]
-        registrados = info_registrada(addr)
-        if registrados:
-            linhas.append("Já cadastrado(s) nesse endereço:")
-            for comp in registrados:
-                linhas.append("  • " + comp.get("nome", "?")
-                              + " (" + comp.get("tipo", "?") + ")")
-                if comp.get("obs"):
-                    linhas.append("    obs: " + comp["obs"])
-        else:
-            linhas.append("Ainda não cadastrado nesse endereço.")
-
-        escrever_info("\n".join(linhas))
-        usar_btn.config(state="normal")
-
-    def usar_endereco():
-        addr = endereco_atual["valor"]
-        if not addr:
-            return
-        endereco.set(addr)
-        registrados = info_registrada(addr)
-        if len(registrados) == 1 and not nome.get().strip():
-            comp = registrados[0]
-            nome.insert(0, comp.get("nome", ""))
-            if comp.get("tipo"):
-                tipo.set(comp["tipo"])
-            if comp.get("registrador_id"):
-                registrador_id.insert(0, comp["registrador_id"])
-            if comp.get("valor_id"):
-                valor_id.insert(0, comp["valor_id"])
-
-    usar_btn.config(command=usar_endereco)
-
-    def atualizar_portas():
-        valores = [p[0] for p in serial_i2c.listar_portas()]
-        porta_sel["values"] = valores
-        if valores and not porta_sel.get():
-            auto = serial_i2c.autodetectar_porta()
-            porta_sel.set(auto if auto in valores else valores[0])
-
-    def parar_serial():
-        if leitor["thread"] is not None:
-            leitor["thread"].parar()
-            leitor["thread"] = None
-
-    def conectar_serial(event=None):
-        parar_serial()
-        conectados.clear()
-        mostrar_dispositivo(None)
-        t = serial_i2c.LeitorI2C(porta_sel.get(), fila_eventos)
-        leitor["thread"] = t
-        t.start()
-
-    def processar_fila():
-        try:
-            while True:
-                ev = fila_eventos.get_nowait()
-                tipo_ev = ev["tipo"]
-                if tipo_ev == "conn":
-                    conectados[ev["endereco"]] = ev.get("nome", "")
-                    mostrar_dispositivo(ev["endereco"])
-                elif tipo_ev == "disc":
-                    conectados.pop(ev["endereco"], None)
-                    if endereco_atual["valor"] == ev["endereco"]:
-                        mostrar_dispositivo(next(iter(conectados), None))
-                elif tipo_ev == "status":
-                    cor = "green" if ev.get("conectado") else "gray"
-                    status_lbl.config(text=ev.get("msg", ""), foreground=cor)
-        except queue.Empty:
-            pass
-        after_id["valor"] = top.after(200, processar_fila)
-
-    def fechar():
-        parar_serial()
-        if after_id["valor"] is not None:
-            top.after_cancel(after_id["valor"])
-            after_id["valor"] = None
-        top.destroy()
-
-    porta_sel.bind("<<ComboboxSelected>>", conectar_serial)
-    ttk.Button(linha_porta, text="↻", width=3, command=atualizar_portas).pack(side="left", padx=2)
-
-    if not serial_i2c.PYSERIAL_OK:
-        status_lbl.config(text="pyserial não instalado (pip install pyserial)",
-                          foreground="red")
-
-    atualizar_portas()
-    mostrar_dispositivo(None)
-    conectar_serial()
-    top.protocol("WM_DELETE_WINDOW", fechar)
-    after_id["valor"] = top.after(200, processar_fila)
+    ttk.Button(formulario, text="Voltar", command=top.destroy).grid(row=10, column=0, pady=15)
     return top
 
 
