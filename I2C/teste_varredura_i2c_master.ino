@@ -1,33 +1,18 @@
 /*
- * Varredura I2C continua + protocolo serial para o Python.
- *
  * Ligacao:
  *   Arduino Uno  -> SDA = A4, SCL = A5
  *   Arduino Mega -> SDA = 20, SCL = 21
  *   GND comum entre Arduino e o componente.
- *
- * Protocolo serial (uma mensagem por linha, campos separados por ';'):
- *   READY                 -> enviado uma vez ao ligar
- *   CONN;0xNN;nome        -> um dispositivo novo apareceu no endereco 0xNN
- *   DISC;0xNN             -> o dispositivo do endereco 0xNN sumiu
- *   SCAN;n                -> heartbeat: terminou uma varredura, n dispositivos presentes
- *
- * Baud: 9600
- */
+*/
 
 #include <Wire.h>
 
-const unsigned long INTERVALO_MS = 1000;  // periodo entre varreduras
-unsigned long ultimaVarredura = 0;
-
-// presente[addr] guarda o estado da varredura anterior (0x08..0x77).
-bool presente[0x78];
+bool DEBUG = true;
 
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-  for (byte a = 0; a < 0x78; a++) presente[a] = false;
-  Serial.println("READY");
+  varredura();
 }
 
 const char* nomeProvavel(byte addr) {
@@ -109,49 +94,43 @@ const char* nomeProvavel(byte addr) {
       return "desconhecido (cadastrar manualmente)";
   }
 }
-
-void imprimeEndereco(byte addr) {
-  Serial.print("0x");
-  if (addr < 16) Serial.print('0');
-  Serial.print(addr, HEX);
-}
-
+ 
 void varredura() {
   byte error, address;
   int nDevices = 0;
-
+ 
+  Serial.println("Escaneando");
+ 
   for (address = 0x08; address <= 0x77; address++) {
     Wire.beginTransmission(address);
     error = Wire.endTransmission();
     // 0 = ACK (existe device) | 2 = NACK (vazio) | 4 = outro erro
-    bool achou = (error == 0);
-
-    if (achou) nDevices++;
-
-    if (achou && !presente[address]) {
-      // dispositivo novo -> avisa o Python
-      Serial.print("CONN;");
-      imprimeEndereco(address);
-      Serial.print(";");
-      Serial.println(nomeProvavel(address));
-    } else if (!achou && presente[address]) {
-      // dispositivo sumiu
-      Serial.print("DISC;");
-      imprimeEndereco(address);
-      Serial.println();
+ 
+    if (DEBUG) {
+      Serial.print("0x");
+      if (address < 16) Serial.print('0');
+      Serial.print(address, HEX);
+      Serial.print(" err=");
+      Serial.println(error);
     }
-
-    presente[address] = achou;
+ 
+    if (error == 0) {
+      Serial.print("ACHOU 0x");
+      if (address < 16) Serial.print('0');
+      Serial.print(address, HEX);
+      Serial.print("  ->  ");
+      Serial.println(nomeProvavel(address));
+      nDevices++;
+    } else if (error == 4) {
+      Serial.print("ERRO 0x");
+      if (address < 16) Serial.print('0');
+      Serial.println(address, HEX);
+    }
   }
-
-  Serial.print("SCAN;");
+ 
+  Serial.print("Acabou; n_dispositivos=");
   Serial.println(nDevices);
 }
 
 void loop() {
-  unsigned long agora = millis();
-  if (agora - ultimaVarredura >= INTERVALO_MS) {
-    ultimaVarredura = agora;
-    varredura();
-  }
 }
