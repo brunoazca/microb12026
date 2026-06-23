@@ -1,0 +1,168 @@
+# Byte-compiled / cache / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments / Package Managers
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.pixi
+__pypackages__/
+
+# pipenv
+#   Recomendado incluir Pipfile.lock no controle de versão, a menos que haja problemas de cross-platform.
+# Pipfile.lock
+
+# UV
+#   Geralmente recomendado incluir uv.lock no controle de versão.
+# uv.lock
+
+# poetry
+#   Geralmente recomendado incluir poetry.lock no controle de versão.
+# poetry.lock
+# poetry.toml
+
+# pdm
+# pdm.lock
+# pdm.toml
+.pdm-python
+.pdm-build/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pypirc
+
+# PyInstaller
+#   Geralmente esses arquivos são gerados por scripts antes do build.
+*.manifest
+*.spec
+
+# Logs / Installer logs
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / Coverage / Reports
+.coverage
+.coverage.*
+.cache
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+cover/
+
+# Type checkers / Linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# IDEs and Editors
+.vscode/
+.idea/
+.spyderproject
+.spyproject
+.ropeproject
+tempCodeRunnerFile.py
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.envrc
+
+# Jupyter Notebook / IPython
+.ipynb_checkpoints/
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# Django
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx / Documentation / mkdocs
+docs/_build/
+/site
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Translations
+*.mo
+*.pot
+
+# Database / Brokers (Celery, Redis, RabbitMQ, ActiveMQ)
+celerybeat-schedule
+celerybeat.pid
+*.rdb
+*.aof
+*.pid
+mnesia/
+rabbitmq/
+rabbitmq-data/
+activemq-data/
+
+# SageMath
+*.sage.py
+
+# Cython
+cython_debug/
+
+# Abstra
+.abstra/
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Miscellaneous
+*.bak
+*.tmp
