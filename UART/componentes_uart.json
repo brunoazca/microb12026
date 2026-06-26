@@ -2,443 +2,421 @@
   {
     "nome": "HC-05",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "38400, 115200, 57600, 19200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "HC-06",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200, 38400, 19200, 4800, 2400, 1200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT",
-    "resposta": "OK",
     "timeout": 1200,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT": "AT",
+      "AT+VERSION": "AT+VERSION",
+      "AT+NAME": "AT+NAME",
+      "AT+BAUD": "AT+BAUD",
+      "AT+PIN": "AT+PIN",
+      "AT+ROLE": "AT+ROLE"
+    }
   },
   {
     "nome": "HC-08 (BLE)",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200, 57600, 38400, 19200, 4800, 2400, 1200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT",
-    "resposta": "OK",
     "timeout": 1200,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT": "AT"
+    }
   },
   {
     "nome": "HM-10 (BLE)",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200, 38400, 19200, 4800, 2400, 1200, 230400",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT",
-    "resposta": "OK",
     "timeout": 1200,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT": "AT"
+    }
   },
   {
     "nome": "JDY-31",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200, 38400, 19200, 4800, 2400, 1200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "HC-12 (433 MHz)",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200, 57600, 38400, 19200, 4800, 2400, 1200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT",
-    "resposta": "OK",
     "timeout": 500,
-    "nivel_logico": "5 V toler."
+    "nivel_logico": "5 V toler.",
+    "comandos": {
+      "AT": "AT"
+    }
   },
   {
     "nome": "RYLR998 (LoRa)",
     "baud": 115200,
-    "baud_obs": "",
-    "bauds_alt": "9600, 19200, 38400, 57600",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "+OK",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "E32-TTL (LoRa SX1278)",
     "baud": 9600,
-    "baud_obs": "modo config",
-    "bauds_alt": "1200-115200 (modo normal)",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "C1 C1 C1",
-    "resposta": "C0/C1 + 5 bytes (parâmetros)",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "C1 C1 C1": "C1 C1 C1"
+    }
   },
   {
     "nome": "ESP8266 (firmware AT)",
     "baud": 115200,
-    "baud_obs": "",
-    "bauds_alt": "9600, 74880 (boot), 57600",
     "frame": "8N1",
     "transmite_sozinho": "boot",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "ESP32 (firmware AT)",
     "baud": 115200,
-    "baud_obs": "",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "boot",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "SIM800L",
     "baud": 0,
-    "baud_obs": "",
-    "bauds_alt": "9600, 115200, 57600, 38400, 19200, 4800, 2400, 1200",
     "frame": "8N1",
     "transmite_sozinho": "boot",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 800,
-    "nivel_logico": "2,8 V"
+    "nivel_logico": "2,8 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "SIM900 / SIM900A",
     "baud": 0,
-    "baud_obs": "",
-    "bauds_alt": "9600, 115200, 57600, 38400, 19200",
     "frame": "8N1",
     "transmite_sozinho": "boot",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 800,
-    "nivel_logico": "2,8 V"
+    "nivel_logico": "2,8 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "A9 / A9G (GSM+GPS)",
     "baud": 115200,
-    "baud_obs": "",
-    "bauds_alt": "9600, 38400, 57600",
     "frame": "8N1",
     "transmite_sozinho": "boot",
     "tipo_protocolo": "AT",
-    "comando": "AT<CR><LF>",
-    "resposta": "OK",
     "timeout": 800,
-    "nivel_logico": "2,8 V"
+    "nivel_logico": "2,8 V",
+    "comandos": {
+      "AT<CR><LF>": "AT<CR><LF>"
+    }
   },
   {
     "nome": "NEO-6M / NEO-7M",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "4800, 38400, 115200",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "nmea",
-    "comando": "",
-    "resposta": "$GP / $GN",
     "timeout": 1500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "NEO-M8N",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "4800, 19200, 38400, 57600, 115200",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "nmea",
-    "comando": "",
-    "resposta": "$GN (multi-GNSS)",
     "timeout": 1500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "ATGM336H",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "4800, 19200, 38400, 57600, 115200",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "nmea",
-    "comando": "",
-    "resposta": "$GN / $GP / $BD",
     "timeout": 1500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "PMS5003",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "passivo",
-    "comando": "",
-    "resposta": "Header 0x42 0x4D",
     "timeout": 2500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "SDS011 (Nova PM)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "passivo",
-    "comando": "",
-    "resposta": "Frame 0xAA 0xC0 ... 0xAB",
     "timeout": 2500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "ZE08-CH2O",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "passivo",
-    "comando": "",
-    "resposta": "Header 0xFF 0x17",
     "timeout": 2500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "MH-Z19B/C (CO2)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "FF 01 86 00 00 00 00 00 79",
-    "resposta": "FF 86 (9 bytes)",
     "timeout": 600,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "FF 01 86 00 00 00 00 00 79": "FF 01 86 00 00 00 00 00 79"
+    }
   },
   {
     "nome": "MH-Z14A (CO2)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "FF 01 86 00 00 00 00 00 79",
-    "resposta": "FF 86 (9 bytes)",
     "timeout": 600,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "FF 01 86 00 00 00 00 00 79": "FF 01 86 00 00 00 00 00 79"
+    }
   },
   {
     "nome": "Senseair S8 (CO2)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "FE 04 00 03 00 01 D5 C5",
-    "resposta": "FE 04 02 + CO2 + CRC",
     "timeout": 600,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "FE 04 00 03 00 01 D5 C5": "FE 04 00 03 00 01 D5 C5"
+    }
   },
   {
     "nome": "TF-Luna / TFmini (LiDAR)",
     "baud": 115200,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "passivo",
-    "comando": "",
-    "resposta": "Header 0x59 0x59",
     "timeout": 500,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "US-100 (ultrassônico)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "55",
-    "resposta": "2 bytes (distância em mm)",
     "timeout": 300,
-    "nivel_logico": "5 V toler."
+    "nivel_logico": "5 V toler.",
+    "comandos": {
+      "55": "55"
+    }
   },
   {
     "nome": "A02YYUW (ultrassônico IP67)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "sim",
     "tipo_protocolo": "passivo",
-    "comando": "",
-    "resposta": "Header 0xFF + 3 bytes",
     "timeout": 800,
-    "nivel_logico": "5 V toler."
+    "nivel_logico": "5 V toler.",
+    "comandos": {}
   },
   {
     "nome": "RDM6300",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "boot",
     "tipo_protocolo": "passivo",
-    "comando": "",
-    "resposta": "STX 0x02 ... ETX 0x03",
     "timeout": 0,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {}
   },
   {
     "nome": "PN532 (NFC 13,56 MHz)",
     "baud": 115200,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "Wakeup 55 55 00×14 + 00 00 FF 02 FE D4 02 2A 00",
-    "resposta": "00 00 FF ... D5 03 (versão FW)",
     "timeout": 800,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "Wakeup 55 55 00×14 + 00 00 FF 02 FE D4 02 2A 00": "Wakeup 55 55 00×14 + 00 00 FF 02 FE D4 02 2A 00"
+    }
   },
   {
     "nome": "R307 / AS608",
     "baud": 57600,
-    "baud_obs": "",
-    "bauds_alt": "9600, 19200, 38400, 115200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "EF 01 FF FF FF FF 01 00 03 01 00 05",
-    "resposta": "Frame EF 01",
     "timeout": 800,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "EF 01 FF FF FF FF 01 00 03 01 00 05": "EF 01 FF FF FF FF 01 00 03 01 00 05"
+    }
   },
   {
     "nome": "R503 (anel LED)",
     "baud": 57600,
-    "baud_obs": "",
-    "bauds_alt": "9600, 19200, 38400, 115200",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "EF 01 FF FF FF FF 01 00 03 01 00 05",
-    "resposta": "Frame EF 01",
     "timeout": 800,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "EF 01 FF FF FF FF 01 00 03 01 00 05": "EF 01 FF FF FF FF 01 00 03 01 00 05"
+    }
   },
   {
     "nome": "GT-511C3",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200 (configurável)",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "55 AA 01 00 00 00 00 00 01 00 01 01",
-    "resposta": "55 AA ... ACK 0x30",
     "timeout": 800,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "55 AA 01 00 00 00 00 00 01 00 01 01": "55 AA 01 00 00 00 00 00 01 00 01 01"
+    }
   },
   {
     "nome": "DFPlayer Mini",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "7E FF 06 42 00 00 00 FE B9 EF",
-    "resposta": "Frame 7E FF 06",
     "timeout": 600,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "7E FF 06 42 00 00 00 FE B9 EF": "7E FF 06 42 00 00 00 FE B9 EF"
+    }
   },
   {
     "nome": "YX5300 (Catalex)",
     "baud": 9600,
-    "baud_obs": "fixo",
-    "bauds_alt": "",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "7E FF 06 42 00 00 00 EF",
-    "resposta": "Frame 7E FF 06",
     "timeout": 600,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "7E FF 06 42 00 00 00 EF": "7E FF 06 42 00 00 00 EF"
+    }
   },
   {
     "nome": "VC0706 (câmera serial JPEG)",
     "baud": 38400,
-    "baud_obs": "",
-    "bauds_alt": "115200, 9600",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "56 00 11 00",
-    "resposta": "76 00 11 00 + 'VC0706 1.00'",
     "timeout": 600,
-    "nivel_logico": "3,3 V"
+    "nivel_logico": "3,3 V",
+    "comandos": {
+      "56 00 11 00": "56 00 11 00"
+    }
   },
   {
     "nome": "Nextion",
     "baud": 9600,
-    "baud_obs": "",
-    "bauds_alt": "115200, 57600, 38400, 19200, 4800, 2400",
     "frame": "8N1",
     "transmite_sozinho": "nao",
     "tipo_protocolo": "binario",
-    "comando": "connect + FF FF FF",
-    "resposta": "comok ...",
     "timeout": 600,
-    "nivel_logico": "5 V"
+    "nivel_logico": "5 V",
+    "comandos": {
+      "connect + FF FF FF": "connect + FF FF FF"
+    }
+  },
+  {
+    "nome": "aaaaaa",
+    "baud": 9600,
+    "frame": "8N1",
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT",
+    "timeout": 500,
+    "nivel_logico": "5 V",
+    "comandos": {
+      "asvgdgasvdja": "asvgdgasvdja",
+      "jan": "jan"
+    }
+  },
+  {
+    "nome": "aaaaa",
+    "baud": 9600,
+    "frame": "8N1",
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT",
+    "timeout": 500,
+    "nivel_logico": "5 V",
+    "comandos": {
+      "aaaaaa": "aaaaaa"
+    }
   }
 ]
