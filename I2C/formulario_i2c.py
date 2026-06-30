@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, scrolledtext
+
 import json
 
 TIPOS = ["acelerometro/IMU", "magnetometro", "temperatura/umidade", "pressao",
@@ -42,7 +43,7 @@ def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None)
 
     top = tk.Toplevel(parent)
     top.title("Edição de Componente I2C" if edicao else "Cadastro de Componente I2C")
-    top.geometry("440x520")
+    top.geometry("460x700")
     top.transient(parent)
 
     formulario = ttk.Frame(top)
@@ -91,6 +92,26 @@ def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None)
     ttk.Label(formulario, text="Obs.:").grid(row=9, column=0, sticky="e", padx=5, pady=4)
     obs = ttk.Entry(formulario, width=28)
     obs.grid(row=9, column=1, pady=4)
+    
+
+    ttk.Label(formulario, text="Comandos:").grid(
+        row=10, column=0, sticky="ne", padx=5, pady=4
+    )
+
+    comandos_txt = scrolledtext.ScrolledText(
+        formulario,
+        width=28,
+        height=5,
+        font=("Menlo", 10)
+    )
+    comandos_txt.grid(row=10, column=1, pady=4)
+
+    ttk.Label(
+        formulario,
+        text="Um por linha:  nome=reg:val, reg:val\nex.: Acende=0x00:0x08",
+        font=("Segoe UI", 8, "italic"),
+        foreground="gray"
+    ).grid(row=11, column=1, sticky="w")
 
     # ----- LOAD: edição carrega o componente; cadastro usa o endereço dado --
     if edicao:
@@ -105,6 +126,13 @@ def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None)
         velocidade.set(str(comp.get("velocidade", "100000")))
         nivel.set(comp.get("nivel_logico", "3,3 V"))
         obs.insert(0, comp.get("obs", ""))
+        linhas = []
+        for cmd in comp.get("comandos", []):
+            linhas.append(
+                f'{cmd.get("nome","")}={cmd.get("sequencia","")}'
+            )
+
+        comandos_txt.insert("1.0", "\n".join(linhas))
     elif endereco_inicial:
         endereco.set(endereco_inicial)
 
@@ -124,6 +152,25 @@ def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None)
         except ValueError:
             messagebox.showwarning("Dados inválidos", "Velocidade deve ser um número inteiro (Hz).")
             return
+        
+        lista_comandos = []
+
+        for linha in comandos_txt.get("1.0", "end").splitlines():
+
+            linha = linha.strip()
+
+            if not linha:
+                continue
+
+            if "=" not in linha:
+                continue
+
+            nome_cmd, sequencia = linha.split("=", 1)
+
+            lista_comandos.append({
+                "nome": nome_cmd.strip(),
+                "sequencia": sequencia.strip()
+            })
 
         dados = {
             "nome": nome.get().strip(),
@@ -134,8 +181,10 @@ def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None)
             "valor_id": valor_id.get(),
             "velocidade": vel,
             "nivel_logico": nivel.get(),
-            "obs": obs.get()
+            "obs": obs.get(),
+            "comandos": lista_comandos
         }
+
 
         if not messagebox.askyesno("Confirmar", "Salvar componente?"):
             return
@@ -154,8 +203,8 @@ def abrir_formulario(parent, indice=None, ao_salvar=None, endereco_inicial=None)
         if ao_salvar:
             ao_salvar()
 
-    ttk.Button(formulario, text="Salvar", command=salvar).grid(row=10, column=1, pady=15)
-    ttk.Button(formulario, text="Voltar", command=top.destroy).grid(row=10, column=0, pady=15)
+    ttk.Button(formulario, text="Salvar", command=salvar).grid(row=12, column=1, pady=15)
+    ttk.Button(formulario, text="Voltar", command=top.destroy).grid(row=12, column=0, pady=15)
     return top
 
 
@@ -167,3 +216,5 @@ if __name__ == "__main__":
     janela = abrir_formulario(raiz, idx)
     janela.protocol("WM_DELETE_WINDOW", raiz.destroy)
     raiz.mainloop()
+
+

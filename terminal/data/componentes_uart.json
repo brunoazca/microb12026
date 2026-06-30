@@ -1,0 +1,649 @@
+[
+  {
+    "id": "hc_05",
+    "nome": "HC-05",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "hc_06",
+    "nome": "HC-06",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT",
+        "tx": "AT",
+        "modo": "T",
+        "esperado": ""
+      },
+      {
+        "nome": "AT+VERSION",
+        "tx": "AT+VERSION",
+        "modo": "T",
+        "esperado": ""
+      },
+      {
+        "nome": "AT+NAME",
+        "tx": "AT+NAME",
+        "modo": "T",
+        "esperado": ""
+      },
+      {
+        "nome": "AT+BAUD",
+        "tx": "AT+BAUD",
+        "modo": "T",
+        "esperado": ""
+      },
+      {
+        "nome": "AT+PIN",
+        "tx": "AT+PIN",
+        "modo": "T",
+        "esperado": ""
+      },
+      {
+        "nome": "AT+ROLE",
+        "tx": "AT+ROLE",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 1200,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "hc_08",
+    "nome": "HC-08 (BLE)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT",
+        "tx": "AT",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 1200,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "hm_10",
+    "nome": "HM-10 (BLE)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT",
+        "tx": "AT",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 1200,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "jdy_31",
+    "nome": "JDY-31",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "hc_12",
+    "nome": "HC-12 (433 MHz)",
+    "tipo": "",
+    "nivel_logico": "5 V toler.",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT",
+        "tx": "AT",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "rylr998",
+    "nome": "RYLR998 (LoRa)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 115200,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "e32_ttl",
+    "nome": "E32-TTL (LoRa SX1278)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "C1 C1 C1",
+        "tx": "C1 C1 C1",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "esp8266",
+    "nome": "ESP8266 (firmware AT)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 115200,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "boot",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "esp32",
+    "nome": "ESP32 (firmware AT)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 115200,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "boot",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "sim800l",
+    "nome": "SIM800L",
+    "tipo": "",
+    "nivel_logico": "2,8 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 0,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "boot",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "sim900_sim900a",
+    "nome": "SIM900 / SIM900A",
+    "tipo": "",
+    "nivel_logico": "2,8 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 0,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "boot",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "a9_a9g",
+    "nome": "A9 / A9G (GSM+GPS)",
+    "tipo": "",
+    "nivel_logico": "2,8 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "AT<CR><LF>",
+        "tx": "AT<CR><LF>",
+        "modo": "T",
+        "esperado": ""
+      }
+    ],
+    "baud": 115200,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "boot",
+    "tipo_protocolo": "AT"
+  },
+  {
+    "id": "neo_6m_neo_7m",
+    "nome": "NEO-6M / NEO-7M",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 1500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "nmea"
+  },
+  {
+    "id": "neo_m8n",
+    "nome": "NEO-M8N",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 1500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "nmea"
+  },
+  {
+    "id": "atgm336h",
+    "nome": "ATGM336H",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 1500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "nmea"
+  },
+  {
+    "id": "pms5003",
+    "nome": "PMS5003",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 2500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "passivo"
+  },
+  {
+    "id": "sds011",
+    "nome": "SDS011 (Nova PM)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 2500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "passivo"
+  },
+  {
+    "id": "ze08_ch2o",
+    "nome": "ZE08-CH2O",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 2500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "passivo"
+  },
+  {
+    "id": "mh_z19b_c",
+    "nome": "MH-Z19B/C (CO2)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "FF 01 86 00 00 00 00 00 79",
+        "tx": "FF 01 86 00 00 00 00 00 79",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "mh_z14a",
+    "nome": "MH-Z14A (CO2)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "FF 01 86 00 00 00 00 00 79",
+        "tx": "FF 01 86 00 00 00 00 00 79",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "senseair_s8",
+    "nome": "Senseair S8 (CO2)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "FE 04 00 03 00 01 D5 C5",
+        "tx": "FE 04 00 03 00 01 D5 C5",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "tf_luna_tfmini",
+    "nome": "TF-Luna / TFmini (LiDAR)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 115200,
+    "frame": "8N1",
+    "timeout": 500,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "passivo"
+  },
+  {
+    "id": "us_100",
+    "nome": "US-100 (ultrassônico)",
+    "tipo": "",
+    "nivel_logico": "5 V toler.",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "55",
+        "tx": "55",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 300,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "a02yyuw",
+    "nome": "A02YYUW (ultrassônico IP67)",
+    "tipo": "",
+    "nivel_logico": "5 V toler.",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "sim",
+    "tipo_protocolo": "passivo"
+  },
+  {
+    "id": "rdm6300",
+    "nome": "RDM6300",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 0,
+    "transmite_sozinho": "boot",
+    "tipo_protocolo": "passivo"
+  },
+  {
+    "id": "pn532",
+    "nome": "PN532 (NFC 13,56 MHz)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "Wakeup 55 55 00×14 + 00 00 FF 02 FE D4 02 2A 00",
+        "tx": "Wakeup 55 55 00×14 + 00 00 FF 02 FE D4 02 2A 00",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 115200,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "r307_as608",
+    "nome": "R307 / AS608",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "EF 01 FF FF FF FF 01 00 03 01 00 05",
+        "tx": "EF 01 FF FF FF FF 01 00 03 01 00 05",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 57600,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "r503",
+    "nome": "R503 (anel LED)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "EF 01 FF FF FF FF 01 00 03 01 00 05",
+        "tx": "EF 01 FF FF FF FF 01 00 03 01 00 05",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 57600,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "gt_511c3",
+    "nome": "GT-511C3",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "55 AA 01 00 00 00 00 00 01 00 01 01",
+        "tx": "55 AA 01 00 00 00 00 00 01 00 01 01",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 800,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "dfplayer_mini",
+    "nome": "DFPlayer Mini",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "7E FF 06 42 00 00 00 FE B9 EF",
+        "tx": "7E FF 06 42 00 00 00 FE B9 EF",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "yx5300",
+    "nome": "YX5300 (Catalex)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "7E FF 06 42 00 00 00 EF",
+        "tx": "7E FF 06 42 00 00 00 EF",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "vc0706",
+    "nome": "VC0706 (câmera serial JPEG)",
+    "tipo": "",
+    "nivel_logico": "3,3 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "56 00 11 00",
+        "tx": "56 00 11 00",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 38400,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  },
+  {
+    "id": "nextion",
+    "nome": "Nextion",
+    "tipo": "",
+    "nivel_logico": "5 V",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "connect + FF FF FF",
+        "tx": "connect + FF FF FF",
+        "modo": "H",
+        "esperado": ""
+      }
+    ],
+    "baud": 9600,
+    "frame": "8N1",
+    "timeout": 600,
+    "transmite_sozinho": "nao",
+    "tipo_protocolo": "binario"
+  }
+]

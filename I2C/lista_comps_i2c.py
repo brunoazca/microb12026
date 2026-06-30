@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, scrolledtext
+from functools import partial
 import json
-
 import formulario_i2c
 
 try:
@@ -16,10 +16,9 @@ BAUD = 9600
 
 janela = tk.Tk()
 janela.title("Seleção de Componentes I2C")
-janela.geometry("460x640")
+janela.geometry("480x780")
 
 selecionados = []
-
 
 def carregar():
     with open(ARQUIVO, "r", encoding="utf-8") as f:
@@ -80,6 +79,27 @@ def apagar():
         recarregar_lista()
         apagados.config(text="Apagados: " + ", ".join(nomes))
         selecionados = []
+        
+def executar_comando(cmd):
+    """Executa a sequência de um comando (chamado direto pelo botão do comando)."""
+    addr = addr_detectado["valor"]
+    if not addr:
+        return
+
+    pares = []
+    for item in cmd.get("sequencia", "").split(","):
+        item = item.strip()
+        if ":" in item:
+            reg, val = item.split(":", 1)
+            pares.append(reg.strip() + ";" + val.strip())
+
+    if not pares:
+        resp_lbl.config(text="Comando '%s' sem sequência válida (use reg:val)."
+                        % cmd.get("nome", ""), foreground="red")
+        return
+
+    resp_lbl.config(text="Executando: " + cmd.get("nome", ""), foreground="black")
+    enviar("WRITE;%s;" % addr + ";".join(pares))
 
 
 tk.Button(botoes, text="Cadastrar", command=cadastrar).grid(row=0, column=0, padx=5)
@@ -97,7 +117,6 @@ lista.pack(pady=10, fill=tk.BOTH, expand=True)
 lista.bind("<<ListboxSelect>>", selecionar)
 
 recarregar_lista()
-
 
 # --------------------------------------------------------------------------
 # Detecção I2C via serial (conexão única, viva enquanto o app estiver aberto).
@@ -120,22 +139,39 @@ status_lbl.pack(anchor="w", padx=8)
 info_lbl = ttk.Label(painel, text="", justify="left")
 info_lbl.pack(anchor="w", padx=8, pady=4)
 
-cad_btn = tk.Button(painel, text="Cadastrar detectado", state="disabled")
-cad_btn.pack(pady=(0, 4))
+acoes_frame = ttk.Frame(painel)
+acoes_frame.pack(pady=(0, 4))
+cad_btn = tk.Button(acoes_frame, text="Cadastrar detectado", state="disabled")
+cad_btn.pack(side="left", padx=2)
+edit_btn = tk.Button(acoes_frame, text="Editar detectado", state="disabled")
+edit_btn.pack(side="left", padx=2)
 
 # leitura/escrita de registrador do dispositivo detectado
 cmd_frame = ttk.Frame(painel)
-cmd_frame.pack(fill="x", padx=8, pady=(0, 2))
-ttk.Label(cmd_frame, text="Reg:").pack(side="left")
-reg_entry = ttk.Entry(cmd_frame, width=6)
+cmd_frame.pack(fill="x", padx=8, pady=5)
+ttk.Label(cmd_frame, text="Envio de comandos:").pack(anchor="w", pady=(0, 5))
+
+campos_frame = ttk.Frame(cmd_frame)
+campos_frame.pack(fill="x")
+ttk.Label(campos_frame, text="Reg:").pack(side="left")
+reg_entry = ttk.Entry(campos_frame, width=6)
 reg_entry.pack(side="left", padx=2)
-ler_btn = tk.Button(cmd_frame, text="Ler", state="disabled")
+ler_btn = tk.Button(campos_frame, text="Ler", state="disabled")
 ler_btn.pack(side="left", padx=2)
-ttk.Label(cmd_frame, text="Val:").pack(side="left", padx=(8, 0))
-val_entry = ttk.Entry(cmd_frame, width=6)
+ttk.Label(campos_frame, text="Val:").pack(side="left", padx=(8, 0))
+val_entry = ttk.Entry(campos_frame, width=6)
 val_entry.pack(side="left", padx=2)
-esc_btn = tk.Button(cmd_frame, text="Escrever", state="disabled")
+esc_btn = tk.Button(campos_frame, text="Escrever", state="disabled")
 esc_btn.pack(side="left", padx=2)
+ttk.Label(
+    cmd_frame,
+    text="Comandos cadastrados:"
+).pack(anchor="w", pady=(8, 2))
+
+# um botão por comando do componente; clicar já executa
+comandos_frame = ttk.Frame(cmd_frame)
+comandos_frame.pack(fill="x", pady=(0, 5))
+
 
 resp_lbl = ttk.Label(painel, text="", justify="left")
 resp_lbl.pack(anchor="w", padx=8, pady=(0, 8))
@@ -148,6 +184,20 @@ loop_id = {"valor": None}
 def info_registrada(addr):
     return [c for c in carregar() if c.get("endereco", "").lower() == addr.lower()]
 
+def atualizar_lista_comandos(addr):
+    # recria os botões dos comandos do componente detectado
+    for w in comandos_frame.winfo_children():
+        w.destroy()
+    if not addr:
+        return
+    comp = next((c for c in carregar()
+                 if c.get("endereco", "").lower() == addr.lower()), None)
+    if not comp:
+        return
+    for cmd in comp.get("comandos", []):
+        tk.Button(comandos_frame, text=cmd.get("nome", "Sem nome"),
+                  command=partial(executar_comando, cmd),
+                  bg="#e1f5fe").pack(fill="x", pady=1)
 
 def mostrar_detectado(addr):
     addr_detectado["valor"] = addr
@@ -156,16 +206,20 @@ def mostrar_detectado(addr):
     ler_btn.config(state=estado)
     esc_btn.config(state=estado)
     if addr is None:
+        atualizar_lista_comandos(None)
+        edit_btn.config(state="disabled")
         info_lbl.config(text="Nenhum dispositivo detectado.")
         resp_lbl.config(text="")
         return
     registrados = info_registrada(addr)
+    edit_btn.config(state="normal" if registrados else "disabled")
     if registrados:
         nomes = ", ".join(c.get("nome", "?") for c in registrados)
-        texto = "Endereço " + addr + " — identificado:\n" + nomes
+        texto = "Endereço " + addr + " - identificado:\n" + nomes
     else:
-        texto = "Endereço " + addr + " — não cadastrado ainda."
+        texto = "Endereço " + addr + " - não cadastrado ainda."
     info_lbl.config(text=texto)
+    atualizar_lista_comandos(addr)
 
 
 def cadastrar_detectado():
@@ -173,6 +227,23 @@ def cadastrar_detectado():
     if addr:
         formulario_i2c.abrir_formulario(janela, indice=None,
                                         ao_salvar=recarregar_lista, endereco_inicial=addr)
+
+
+def editar_detectado():
+    addr = addr_detectado["valor"]
+    if not addr:
+        return
+    comps = carregar()
+    indices = [i for i, c in enumerate(comps)
+               if c.get("endereco", "").lower() == addr.lower()]
+    if not indices:
+        messagebox.showinfo("Não cadastrado",
+                            "Esse endereço ainda não está cadastrado. Use Cadastrar detectado.")
+        return
+    if len(indices) > 1:
+        messagebox.showinfo("Vários componentes",
+                            "Há mais de um componente nesse endereço; editando o primeiro.")
+    formulario_i2c.abrir_formulario(janela, indice=indices[0], ao_salvar=recarregar_lista)
 
 
 def enviar(cmd):
@@ -183,6 +254,7 @@ def enviar(cmd):
         return
     try:
         s.write((cmd + "\n").encode())
+        log(cmd, enviado=True)
     except Exception as e:
         resp_lbl.config(text="erro ao enviar: " + str(e), foreground="red")
 
@@ -194,7 +266,6 @@ def ler_registrador():
     resp_lbl.config(text="lendo " + reg + "...", foreground="gray")
     enviar("READ;%s;%s;1" % (addr, reg))
 
-
 def escrever_registrador():
     addr, reg, val = addr_detectado["valor"], reg_entry.get().strip(), val_entry.get().strip()
     if not addr or not reg or not val:
@@ -204,6 +275,7 @@ def escrever_registrador():
 
 
 cad_btn.config(command=cadastrar_detectado)
+edit_btn.config(command=editar_detectado)
 ler_btn.config(command=ler_registrador)
 esc_btn.config(command=escrever_registrador)
 
@@ -273,7 +345,9 @@ def ler_serial():
         try:
             while s.in_waiting:
                 linha = s.readline().decode("utf-8", errors="replace")
-                processar(linha)
+                if linha.strip():
+                    log(linha)
+                    processar(linha)
         except Exception as e:
             status_lbl.config(text="desconectado: " + str(e), foreground="red")
             fechar_porta()
@@ -290,6 +364,30 @@ def sair():
 porta_sel.bind("<<ComboboxSelected>>", abrir_porta)
 ttk.Button(linha_porta, text="↻", width=3, command=atualizar_portas).pack(side="left", padx=2)
 
+
+# Log da serial: tudo que o Arduino manda (e o que enviamos, com "> ")
+log_frame = ttk.LabelFrame(janela, text="Log serial (Arduino)")
+log_frame.pack(fill="both", expand=False, padx=10, pady=(0, 6))
+log_text = scrolledtext.ScrolledText(log_frame, height=8, state="disabled",
+                                     font=("Menlo", 9), wrap="none")
+log_text.pack(fill="both", expand=True, padx=4, pady=4)
+
+
+def log(texto, enviado=False):
+    log_text.config(state="normal")
+    log_text.insert("end", ("> " if enviado else "") + texto.rstrip() + "\n")
+    linhas = int(log_text.index("end-1c").split(".")[0])
+    if linhas > 300:                       
+        log_text.delete("1.0", "%d.0" % (linhas - 300))
+    log_text.see("end")
+    log_text.config(state="disabled")
+
+
+tk.Button(janela, text="Limpar log",
+          command=lambda: (log_text.config(state="normal"),
+                           log_text.delete("1.0", "end"),
+                           log_text.config(state="disabled"))).pack(pady=(0, 4))
+
 tk.Button(janela, text="Sair", command=sair).pack(pady=5)
 
 atualizar_portas()
@@ -299,3 +397,5 @@ janela.protocol("WM_DELETE_WINDOW", sair)
 loop_id["valor"] = janela.after(200, ler_serial)
 
 janela.mainloop()
+
+

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "rc522",
+    "nome": "RC522",
+    "tipo": "",
+    "nivel_logico": "",
+    "obs": "",
+    "comandos": [
+      {
+        "nome": "ler 0x37",
+        "tx": "R 0x37",
+        "esperado": "0x91,0x92"
+      },
+      {
+        "nome": "ler 0x36",
+        "tx": "R 0x36",
+        "esperado": "0x40"
+      }
+    ],
+    "ss_pin": 53,
+    "spi_mode": 0,
+    "clock": 4000000
+  }
+]
