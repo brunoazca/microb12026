@@ -62,7 +62,7 @@ int hexVal(char c) {
 // ================================================================
 //  I2C
 // ================================================================
-const unsigned long I2C_INTERVALO = 1000;
+const unsigned long I2C_INTERVALO = 4000;
 unsigned long i2cUltimaVarredura = 0;
 bool i2cPresente[0x78];
 
@@ -419,7 +419,7 @@ void setup() {
   // LCD de display
   lcd.init();
   lcd.backlight();
-  lcdMostrar("Arduino unif.", "iniciando...");
+  lcdMostrar("Arduino", "iniciando...");
 
   // botao
   pinMode(BTN_PIN, INPUT_PULLUP);
@@ -431,6 +431,8 @@ void setup() {
   digitalWrite(SPI_RST, LOW);  delay(10);
   digitalWrite(SPI_RST, HIGH); delay(50);
   SPI.begin();
+
+  lcdMostrar("Pronto.", "Ligue o py");
 
   // UART: Serial1 so e aberta quando chega um CFG
   Serial.println("RDY");   // avisa o Python; ele responde com MODE|... e LCD:...

@@ -349,7 +349,7 @@ def flash_lcd(msg):
     enviar("LCD:" + msg + "\\n" + tipo["v"])
     if lcd_timer["v"] is not None:
         janela.after_cancel(lcd_timer["v"])
-    lcd_timer["v"] = janela.after(1200, atualizar_lcd)
+    lcd_timer["v"] = janela.after(3000, atualizar_lcd)
 
 
 def proximo_tipo():

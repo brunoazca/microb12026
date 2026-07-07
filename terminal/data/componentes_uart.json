@@ -28,37 +28,37 @@
     "comandos": [
       {
         "nome": "AT",
-        "tx": "AT",
+        "tx": "AT<CR><LF>",
         "modo": "T",
         "esperado": ""
       },
       {
         "nome": "AT+VERSION",
-        "tx": "AT+VERSION",
+        "tx": "AT+VERSION<CR><LF>",
         "modo": "T",
         "esperado": ""
       },
       {
         "nome": "AT+NAME",
-        "tx": "AT+NAME",
+        "tx": "AT+NAME<CR><LF>",
         "modo": "T",
         "esperado": ""
       },
       {
         "nome": "AT+BAUD",
-        "tx": "AT+BAUD",
+        "tx": "AT+BAUD<CR><LF>",
         "modo": "T",
         "esperado": ""
       },
       {
         "nome": "AT+PIN",
-        "tx": "AT+PIN",
+        "tx": "AT+PIN<CR><LF>",
         "modo": "T",
         "esperado": ""
       },
       {
         "nome": "AT+ROLE",
-        "tx": "AT+ROLE",
+        "tx": "AT+ROLE<CR><LF>",
         "modo": "T",
         "esperado": ""
       }
