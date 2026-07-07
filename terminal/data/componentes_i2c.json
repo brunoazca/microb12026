@@ -337,16 +337,15 @@
     "valor_id": ""
   },
   {
-    "id": "tca9548a",
     "nome": "TCA9548A (mux I2C)",
     "tipo": "multiplexador",
-    "nivel_logico": "3,3 V",
-    "obs": "multiplexa 8 barramentos I2C",
-    "comandos": [],
     "endereco": "0x70",
     "enderecos_alt": "0x71-0x77 (A0-A2)",
-    "velocidade": 400000,
+    "velocidade": "400000",
     "registrador_id": "",
-    "valor_id": ""
+    "valor_id": "",
+    "nivel_logico": "3,3 V",
+    "obs": "multiplexa 8 barramentos I2C",
+    "comandos": []
   }
 ]

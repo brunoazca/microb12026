@@ -6,7 +6,6 @@ componente detectado, com envio manual a esquerda e os comandos
 cadastrados como botoes a direita.
 """
 
-import re
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 
@@ -20,7 +19,8 @@ try:
 except ImportError:
     SERIAL_OK = False
 
-BAUD = {"i2c": 9600, "uart": 115200, "spi": 9600}
+
+BAUD = 115200 # UART precisa de 115200
 
 # estado global (dicts para poder alterar de dentro das funcoes)
 tipo = {"v": "i2c"}
@@ -30,15 +30,11 @@ sel = {"i": None}            # indice selecionado na lista
 comandos = {"lista": []}     # comandos do componente em edicao
 ativo = {"comp": None}       # componente mostrado na secao "detectado"
 loop_id = {"v": None}
-
-
-def slug(nome):
-    base = nome.split("(")[0].strip().lower()
-    return re.sub(r"[^a-z0-9]+", "_", base).strip("_")
+lcd_timer = {"v": None}      # after() pendente que restaura o LCD apos um flash
 
 
 janela = tk.Tk()
-janela.title("Terminal I2C / UART / SPI")
+janela.title("Testador de Circuitos Complexos")
 janela.geometry("900x900")
 
 
@@ -83,30 +79,30 @@ ttk.Button(botoes_lista, text="Apagar",
            command=lambda: apagar()).pack(side="left", padx=2)
 
 # direita: editor do componente + editor de comandos
-dir_ = ttk.Frame(banco)
-dir_.pack(side="left", fill="both", expand=True, padx=6, pady=6)
+right = ttk.Frame(banco)
+right.pack(side="left", fill="both", expand=True, padx=6, pady=6)
 
-form_comp = {"w": None}          # Formulario do componente (trocado por tipo)
-form_cmd = {"w": None}           # Formulario do comando (trocado por tipo)
+form_comp = {"w": None}          
+form_cmd = {"w": None}          
 
-caixa_form = ttk.Frame(dir_)     # onde o form do componente e montado
+caixa_form = ttk.Frame(right)     # onde o form do componente e montado
 caixa_form.pack(fill="x")
 
-ttk.Label(dir_, text="Comandos:").pack(anchor="w", pady=(8, 2))
-lista_cmd = tk.Listbox(dir_, height=5)
+ttk.Label(right, text="Comandos:").pack(anchor="w", pady=(8, 2))
+lista_cmd = tk.Listbox(right, height=5)
 lista_cmd.pack(fill="x")
 
-caixa_cmd = ttk.Frame(dir_)      # onde o form do comando e montado
+caixa_cmd = ttk.Frame(right)      # onde o form do comando e montado
 caixa_cmd.pack(fill="x", pady=4)
 
-botoes_cmd = ttk.Frame(dir_)
+botoes_cmd = ttk.Frame(right)
 botoes_cmd.pack(fill="x")
 ttk.Button(botoes_cmd, text="Add comando",
            command=lambda: add_comando()).pack(side="left", padx=2)
 ttk.Button(botoes_cmd, text="Remover comando",
            command=lambda: del_comando()).pack(side="left", padx=2)
 
-ttk.Button(dir_, text="Salvar componente",
+ttk.Button(right, text="Salvar componente",
            command=lambda: salvar()).pack(anchor="e", pady=8)
 
 ttk.Separator(janela, orient="horizontal").pack(fill="x", padx=10, pady=4)
@@ -129,6 +125,8 @@ entrada = ttk.Entry(linha_envio)
 entrada.pack(side="left", fill="x", expand=True)
 ttk.Button(linha_envio, text="Enviar",
            command=lambda: enviar_manual()).pack(side="left", padx=4)
+ttk.Button(linha_envio, text="Limpar LCD",
+           command=lambda: limpar_lcd()).pack(side="left", padx=4)
 
 log_txt = scrolledtext.ScrolledText(det_esq, height=10, state="disabled",
                                     font=("Menlo", 9), wrap="none")
@@ -144,6 +142,7 @@ botoes_exec.pack(fill="both", expand=True, pady=4)
 
 # funcoes
 def log(texto, enviado=False):
+    """Escreve uma linha no log da tela (prefixo '> ' quando enviado)."""
     prefixo = ""
     if enviado:
         prefixo = "> "
@@ -174,12 +173,14 @@ def carregar_comps():
 
 
 def mostrar_comandos_edit():
+    """Enche a lista de comandos do componente em edicao."""
     lista_cmd.delete(0, tk.END)
     for c in comandos["lista"]:
         lista_cmd.insert(tk.END, c.get("nome", "(sem nome)"))
 
 
 def selecionar(event=None):
+    """Ao clicar num componente da lista: preenche o editor e o ativa."""
     if not lista.curselection():
         return
     sel["i"] = lista.curselection()[0]
@@ -194,6 +195,7 @@ def selecionar(event=None):
 
 
 def selecionar_comando(event=None):
+    """Ao clicar num comando da lista: joga ele para o editor."""
     if not lista_cmd.curselection():
         return
     cmd = comandos["lista"][lista_cmd.curselection()[0]]
@@ -201,6 +203,7 @@ def selecionar_comando(event=None):
 
 
 def novo():
+    """Limpa o editor para cadastrar um componente novo."""
     sel["i"] = None
     form_comp["w"].limpar()
     comandos["lista"] = []
@@ -208,6 +211,7 @@ def novo():
 
 
 def add_comando():
+    """Adiciona o comando do editor a lista do componente."""
     cmd = form_cmd["w"].coletar()
     if not cmd.get("nome"):
         messagebox.showwarning("Comando", "O comando precisa de um nome.")
@@ -217,6 +221,7 @@ def add_comando():
 
 
 def del_comando():
+    """Remove o comando selecionado da lista."""
     if not lista_cmd.curselection():
         return
     del comandos["lista"][lista_cmd.curselection()[0]]
@@ -224,12 +229,12 @@ def del_comando():
 
 
 def salvar():
+    """Salva o componente do editor no banco (novo ou editado)."""
     valores = form_comp["w"].coletar()
     if not valores.get("nome"):
         messagebox.showwarning("Componente", "O componente precisa de um nome.")
         return
-    comp = {"id": slug(valores["nome"])}
-    comp.update(valores)                  # nome, endereco, velocidade...
+    comp = dict(valores)                  # nome, endereco, velocidade...
     comp["comandos"] = comandos["lista"]
     if sel["i"] is None:
         comps["lista"].append(comp)
@@ -240,6 +245,7 @@ def salvar():
 
 
 def apagar():
+    """Apaga o componente selecionado do banco."""
     if sel["i"] is None:
         messagebox.showwarning("Apagar", "Selecione um componente.")
         return
@@ -261,9 +267,11 @@ def definir_ativo(comp):
 
     if not comp:
         nome_ativo.config(text="(nenhum)")
+        atualizar_lcd()
         return
 
     nome_ativo.config(text=comp["nome"])
+    atualizar_lcd()
 
     # UART precisa configurar a ponte antes de enviar comandos
     if tipo["v"] == "uart" and ser["obj"]:
@@ -296,14 +304,17 @@ def linha_comando(comp, cmd):
 
 
 def executar(cmd):
+    """Monta e envia a linha serial de um comando cadastrado."""
     if not ativo["comp"]:
         return
     linha = linha_comando(ativo["comp"], cmd)
     if linha:
         enviar(linha)
+        flash_lcd("comando enviado")
 
 
 def enviar(linha):
+    """Envia uma linha pela serial e registra no log."""
     if ser["obj"] is None:
         log("(sem conexao serial)")
         return
@@ -315,13 +326,60 @@ def enviar(linha):
 
 
 def enviar_manual():
+    """Envia o texto digitado na caixa de envio manual."""
     linha = entrada.get().strip()
     if linha:
         enviar(linha)
+        flash_lcd("comando enviado")
+
+
+# LCD de display e botao (dependem da placa unificada)
+def enviar_cru(linha):
+    """Envia um comando interno (MODE/LCD) sem logar na tela."""
+    if ser["obj"] is None:
+        return
+    try:
+        ser["obj"].write((linha + "\n").encode())
+    except Exception:
+        pass
+
+
+def enviar_modo():
+    """Avisa o Arduino qual interface esta ativa (liga/desliga varredura I2C)."""
+    enviar_cru("MODE|" + tipo["v"])
+
+
+def atualizar_lcd(cima=None):
+    """Linha de cima = componente; linha de baixo = tipo de comunicacao."""
+    if cima is None:
+        cima = ativo["comp"]["nome"] if ativo["comp"] else ""
+    enviar_cru("LCD:" + cima + "\\n" + tipo["v"])
+
+
+def flash_lcd(msg):
+    """Mostra uma mensagem rapida na linha de cima e depois restaura."""
+    enviar_cru("LCD:" + msg + "\\n" + tipo["v"])
+    if lcd_timer["v"] is not None:
+        janela.after_cancel(lcd_timer["v"])
+    lcd_timer["v"] = janela.after(1200, atualizar_lcd)
+
+
+def limpar_lcd():
+    """Limpa o LCD de display."""
+    enviar_cru("LCDCLEAR")
+
+
+def proximo_tipo():
+    """Cicla i2c -> uart -> spi (acionado pelo botao no Arduino)."""
+    ordem = ["i2c", "uart", "spi"]
+    prox = ordem[(ordem.index(tipo["v"]) + 1) % len(ordem)]
+    tipo_sel.set(prox)
+    trocar_tipo()
 
 
 # serial
 def atualizar_portas():
+    """Lista as portas seriais disponiveis no combobox."""
     portas = []
     if SERIAL_OK:
         for p in list_ports.comports():
@@ -332,6 +390,7 @@ def atualizar_portas():
 
 
 def fechar_porta():
+    """Fecha a porta serial e marca como desconectado."""
     if ser["obj"] is not None:
         try:
             ser["obj"].close()
@@ -342,6 +401,7 @@ def fechar_porta():
 
 
 def abrir_porta(event=None):
+    """Abre a porta serial escolhida e sincroniza modo/LCD."""
     fechar_porta()
     if not SERIAL_OK:
         status.config(text="X pyserial ausente", foreground="red")
@@ -350,14 +410,17 @@ def abrir_porta(event=None):
     if not porta:
         return
     try:
-        ser["obj"] = serial.Serial(porta, BAUD[tipo["v"]], timeout=0.1)
+        ser["obj"] = serial.Serial(porta, BAUD, timeout=0.1)
         status.config(text="conectado (" + porta + ")",
                       foreground="green")
+        enviar_modo()        # sincroniza a interface e o LCD (o RDY do
+        atualizar_lcd()      # Arduino tambem redispara isso apos o reset)
     except Exception as e:
         status.config(text="X erro: " + str(e), foreground="red")
 
 
 def norm_addr(texto):
+    """Normaliza um endereco hex para o formato 0xNN (None se invalido)."""
     try:
         return "0x%02X" % int(texto.strip(), 16)
     except ValueError:
@@ -387,12 +450,21 @@ def processar(linha):
 
 
 def ler_serial():
+    """Loop periodico: le a serial e trata BTN/RDY/eventos das interfaces."""
     s = ser["obj"]
     if s is not None:
         try:
             while s.in_waiting:
                 linha = s.readline().decode("utf-8", errors="replace")
-                if linha.strip():
+                texto = linha.strip()
+                if not texto:
+                    continue
+                if texto == "BTN":            # botao: proxima interface
+                    proximo_tipo()
+                elif texto == "RDY":          # Arduino (re)iniciou: ressincroniza
+                    enviar_modo()
+                    atualizar_lcd()
+                else:
                     log(linha)
                     processar(linha)
         except Exception as e:
@@ -403,17 +475,19 @@ def ler_serial():
 
 
 def trocar_tipo(event=None):
+    """Troca a interface ativa (i2c/uart/spi) e avisa o Arduino."""
     tipo["v"] = tipo_sel.get()
     sel["i"] = None
     comandos["lista"] = []
-    definir_ativo(None)
+    definir_ativo(None)          # limpa componente e atualiza o LCD
     montar_forms()
     carregar_comps()
     mostrar_comandos_edit()
-    abrir_porta()        # reabre no baud do novo tipo
+    enviar_modo()                
 
 
 def sair():
+    """Fecha tudo e encerra o programa."""
     fechar_porta()
     if loop_id["v"] is not None:
         janela.after_cancel(loop_id["v"])
