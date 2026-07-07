@@ -26,7 +26,8 @@
 
 #include <Wire.h>
 #include <SPI.h>
-#include <LiquidCrystal_I2C.h>   // lib "LiquidCrystal I2C" (Frank de Brabander)
+#include <LiquidCrystal_I2C.h>  
+#include <RotaryEncoder.h>
 
 // ---------------- link USB ----------------
 const long USB_BAUD = 115200;
@@ -42,9 +43,20 @@ const uint8_t LCD_COLS = 16;
 const uint8_t LCD_ROWS = 2;
 LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLS, LCD_ROWS);
 
-// ---------------- botao (troca de interface) ----------------
-const int BTN_PIN = 2;                 // outra perna no GND (INPUT_PULLUP)
-bool btnUltimoNivel = HIGH;
+// ---------------- Encoder ----------------
+const byte ENC_A  = 2;   // CLK
+const byte ENC_B  = 3;   // DT
+const byte ENC_SW = 4;   // Botão
+
+// Botão (debounce)
+bool swUltimaLeitura = HIGH;
+bool swEstado = HIGH;
+unsigned long swUltimaMudanca = 0;
+const unsigned long SW_DEBOUNCE = 40;
+
+// Encoder
+RotaryEncoder encoder(ENC_A, ENC_B);
+long ultimaPosicao = 0;
 
 // ---------------- helpers de hex (compartilhados) ----------------
 void printHex2(byte v) {
@@ -369,12 +381,39 @@ void lcdComando(String p) {
   else        lcdMostrar(p, "");
 }
 
-void lerBotao() {
-  bool nivel = digitalRead(BTN_PIN);
-  if (nivel == LOW && btnUltimoNivel == HIGH) {   // borda de descida = apertou
-    Serial.println("BTN");           // avisa o Python para trocar de interface
+void tickDoEncoder() {
+  encoder.tick();
+}
+
+void lerEncoder() {
+  long posicao = encoder.getPosition();
+
+  if (posicao != ultimaPosicao) {
+    if (posicao > ultimaPosicao)
+      Serial.println("ENC;CW");
+    else
+      Serial.println("ENC;CCW");
+
+    ultimaPosicao = posicao;
   }
-  btnUltimoNivel = nivel;
+
+  // Trata botão (debounce)
+  bool leitura = digitalRead(ENC_SW);
+
+  if (leitura != swUltimaLeitura) {
+    swUltimaMudanca = millis();
+    swUltimaLeitura = leitura;
+  }
+
+  if (millis() - swUltimaMudanca >= SW_DEBOUNCE) {
+    if (leitura != swEstado) {
+      swEstado = leitura;
+
+      if (swEstado == LOW) {
+        Serial.println("BTN");
+      }
+    }
+  }
 }
 
 // ================================================================
@@ -421,8 +460,12 @@ void setup() {
   lcd.backlight();
   lcdMostrar("Arduino", "iniciando...");
 
-  // botao
-  pinMode(BTN_PIN, INPUT_PULLUP);
+  // encoder
+  pinMode(ENC_SW, INPUT_PULLUP);
+  int origem1 = digitalPinToInterrupt(ENC_A); 
+  int origem2 = digitalPinToInterrupt(ENC_B); 
+  attachInterrupt(origem1, tickDoEncoder, CHANGE); 
+  attachInterrupt(origem2, tickDoEncoder, CHANGE); 
 
   // SPI / RC522
   pinMode(SPI_SS, OUTPUT);
@@ -445,7 +488,7 @@ void loop() {
     else if (c != '\r') linha += c;
   }
 
-  lerBotao();
+  lerEncoder();
 
   if (modoI2C && millis() - i2cUltimaVarredura >= I2C_INTERVALO) {
     i2cUltimaVarredura = millis();

@@ -24,6 +24,8 @@ BAUD = 115200 # UART precisa de 115200
 
 # estado global (dicts para poder alterar de dentro das funcoes)
 tipo = {"v": "i2c"}
+tipo_a_confirmar = {"v": "i2c"}
+tipo_confirmado = {"v": True}
 ser = {"obj": None}
 comps = {"lista": []}        # componentes carregados do banco
 sel = {"i": None}            # indice selecionado na lista
@@ -352,7 +354,7 @@ def atualizar_lcd(cima=None):
     """Linha de cima = componente; linha de baixo = tipo de comunicacao."""
     if cima is None:
         cima = ativo["comp"]["nome"] if ativo["comp"] else ""
-    enviar("LCD:" + cima + "\\n" + tipo["v"])
+    enviar("LCD:" + cima + "\\n" + (tipo["v"] if tipo_confirmado["v"] else tipo_a_confirmar["v"]+"?"+" (cur:%s)"%(tipo["v"])))
 
 
 def flash_lcd(msg):
@@ -363,13 +365,19 @@ def flash_lcd(msg):
     lcd_timer["v"] = janela.after(3000, atualizar_lcd)
 
 
-def proximo_tipo():
+def proximo_tipo(eh_cw):
     """Cicla i2c -> uart -> spi (acionado pelo botao no Arduino)."""
     ordem = ["i2c", "uart", "spi"]
-    prox = ordem[(ordem.index(tipo["v"]) + 1) % len(ordem)]
-    tipo_sel.set(prox)
-    trocar_tipo()
+    prox = ordem[(ordem.index(tipo_a_confirmar["v"]) + (1 if eh_cw else -1)) % len(ordem)]
+    tipo_a_confirmar["v"] = prox
+    tipo_confirmado["v"] = False
+    atualizar_lcd()
 
+def confirma_tipo():
+    """Confirma ciclo i2c -> uart -> spi (acionado pelo botao no Arduino)."""
+    tipo_sel.set(tipo_a_confirmar["v"])
+    trocar_tipo()
+    atualizar_lcd()
 
 # serial
 def atualizar_portas():
@@ -455,13 +463,17 @@ def ler_serial():
                 texto = linha.strip()
                 if not texto:
                     continue
-                if texto == "BTN":            # botao: proxima interface
-                    proximo_tipo()
+                log(linha)
+                if texto == "ENC;CW":
+                    proximo_tipo(True)
+                elif texto == "ENC;CCW":
+                    proximo_tipo(False)
+                elif texto == "BTN":            # botao: proxima interface
+                    confirma_tipo()
                 elif texto == "RDY":          # Arduino (re)iniciou: ressincroniza
                     enviar_modo()
                     atualizar_lcd()
                 else:
-                    log(linha)
                     detectar_i2c(linha)
         except Exception as e:
             status.config(text="X desconectado: " + str(e),
@@ -473,6 +485,8 @@ def ler_serial():
 def trocar_tipo(event=None):
     """Troca a interface ativa (i2c/uart/spi) e avisa o Arduino."""
     tipo["v"] = tipo_sel.get()
+    tipo_a_confirmar["v"] = tipo_sel.get()
+    tipo_confirmado["v"] = True
     sel["i"] = None
     comandos["lista"] = []
     definir_ativo(None)          # limpa componente e atualiza o LCD
