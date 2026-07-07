@@ -108,6 +108,12 @@ Cada dispositivo possui um endereço próprio, permitindo que o Arduino converse
 - expansores de portas;
 - memórias EEPROM.
 
+# 🔧 Diagrama do circuito
+
+O circuito completo (Arduino MEGA, botão de troca de interface, LCD I²C e os componentes de cada protocolo) pode ser visualizado e simulado no Wokwi:
+
+🔗 https://wokwi.com/projects/468898400251991041
+
 # 👷 Maintainers
 <table>
   <tr>
