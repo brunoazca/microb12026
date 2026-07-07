@@ -1,9 +1,8 @@
 """Formulario generico + a tabela de campos de cada barramento.
 
-A ideia: em vez de escrever um formulario a mao para I2C, UART e SPI,
-descrevemos os campos numa tabela (CAMPOS) e a classe Formulario monta
+Descrevemos os campos numa tabela (CAMPOS) e a classe Formulario monta
 os widgets percorrendo essa tabela. Para mudar um formulario, edite a
-tabela; nenhum codigo muda.
+tabela.
 
 Cada campo e um dict:
     chave   -> nome do campo no JSON
