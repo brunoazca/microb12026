@@ -354,7 +354,7 @@ def atualizar_lcd(cima=None):
     """Linha de cima = componente; linha de baixo = tipo de comunicacao."""
     if cima is None:
         cima = ativo["comp"]["nome"] if ativo["comp"] else ""
-    enviar("LCD:" + cima + "\\n" + (tipo["v"] if tipo_confirmado["v"] else tipo_a_confirmar["v"]+"?"+" (cur:%s)"%(tipo["v"])))
+    enviar("LCD:" + (tipo["v"] if tipo_confirmado["v"] else tipo_a_confirmar["v"]+"?"+" (cur:%s)"%(tipo["v"])) + "\\n" + cima )
 
 
 def flash_lcd(msg):

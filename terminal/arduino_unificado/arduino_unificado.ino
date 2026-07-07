@@ -432,7 +432,6 @@ void processaLinha(String l) {
     return;
   }
   if (l.startsWith("LCD:")) { lcdComando(l.substring(4)); return; }
-  if (l == "LCDCLEAR")      { lcd.clear();                return; }
 
   // UART: prefixos proprios da ponte
   if (l.startsWith("CFG|"))    { uartCFG(l.substring(4));    return; }
