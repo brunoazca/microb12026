@@ -34,7 +34,7 @@ lcd_timer = {"v": None}      # after() pendente que restaura o LCD apos um flash
 
 
 janela = tk.Tk()
-janela.title("Testador de Circuitos Complexos")
+janela.title("Testador de Componentes Complexos")
 janela.geometry("900x900")
 
 
@@ -125,8 +125,6 @@ entrada = ttk.Entry(linha_envio)
 entrada.pack(side="left", fill="x", expand=True)
 ttk.Button(linha_envio, text="Enviar",
            command=lambda: enviar_manual()).pack(side="left", padx=4)
-ttk.Button(linha_envio, text="Limpar LCD",
-           command=lambda: limpar_lcd()).pack(side="left", padx=4)
 
 log_txt = scrolledtext.ScrolledText(det_esq, height=10, state="disabled",
                                     font=("Menlo", 9), wrap="none")
@@ -362,11 +360,6 @@ def flash_lcd(msg):
     if lcd_timer["v"] is not None:
         janela.after_cancel(lcd_timer["v"])
     lcd_timer["v"] = janela.after(1200, atualizar_lcd)
-
-
-def limpar_lcd():
-    """Limpa o LCD de display."""
-    enviar_cru("LCDCLEAR")
 
 
 def proximo_tipo():
