@@ -332,31 +332,21 @@ def enviar_manual():
 
 
 # LCD de display e botao (dependem da placa unificada)
-def enviar_cru(linha):
-    """Envia um comando interno (MODE/LCD) sem logar na tela."""
-    if ser["obj"] is None:
-        return
-    try:
-        ser["obj"].write((linha + "\n").encode())
-    except Exception:
-        pass
-
-
 def enviar_modo():
     """Avisa o Arduino qual interface esta ativa (liga/desliga varredura I2C)."""
-    enviar_cru("MODE|" + tipo["v"])
+    enviar("MODE|" + tipo["v"])
 
 
 def atualizar_lcd(cima=None):
     """Linha de cima = componente; linha de baixo = tipo de comunicacao."""
     if cima is None:
         cima = ativo["comp"]["nome"] if ativo["comp"] else ""
-    enviar_cru("LCD:" + cima + "\\n" + tipo["v"])
+    enviar("LCD:" + cima + "\\n" + tipo["v"])
 
 
 def flash_lcd(msg):
     """Mostra uma mensagem rapida na linha de cima e depois restaura."""
-    enviar_cru("LCD:" + msg + "\\n" + tipo["v"])
+    enviar("LCD:" + msg + "\\n" + tipo["v"])
     if lcd_timer["v"] is not None:
         janela.after_cancel(lcd_timer["v"])
     lcd_timer["v"] = janela.after(1200, atualizar_lcd)
@@ -420,8 +410,10 @@ def norm_addr(texto):
         return None
 
 
-def processar(linha):
-    """So o I2C detecta sozinho: ao receber CONN, seleciona o componente."""
+def detectar_i2c(linha):
+    """Auto-deteccao I2C: se a linha for um 'CONN;0xNN' (dispositivo achado
+    no barramento), procura no banco um componente com aquele endereco e o
+    ativa sozinho. So vale no modo I2C; em UART/SPI a funcao ignora a linha."""
     if tipo["v"] != "i2c":
         return
     partes = linha.split(";")
@@ -459,7 +451,7 @@ def ler_serial():
                     atualizar_lcd()
                 else:
                     log(linha)
-                    processar(linha)
+                    detectar_i2c(linha)
         except Exception as e:
             status.config(text="X desconectado: " + str(e),
                           foreground="red")
