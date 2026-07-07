@@ -324,11 +324,22 @@ def enviar(linha):
 
 
 def enviar_manual():
-    """Envia o texto digitado na caixa de envio manual."""
-    linha = entrada.get().strip()
-    if linha:
-        enviar(linha)
-        flash_lcd("comando enviado")
+    """Envia o texto digitado usando o protocolo da interface atual e le a resposta."""
+    texto = entrada.get().strip()
+    if not texto:
+        return
+    t = tipo["v"]
+    if t == "uart":
+        linha = "SEND|T|" + texto                 # manda como texto e le a resposta
+    elif t == "i2c":
+        if not ativo["comp"]:
+            log("(sem componente I2C detectado)")
+            return
+        linha = "READ;" + ativo["comp"].get("endereco", "") + ";" + texto + ";1"
+    else:
+        linha = texto                             # spi: registrador cru (ex.: R 0x37)
+    enviar(linha)
+    flash_lcd("comando enviado")
 
 
 # LCD de display e botao (dependem da placa unificada)
