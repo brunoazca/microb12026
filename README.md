@@ -108,7 +108,7 @@ Cada dispositivo possui um endereço próprio, permitindo que o Arduino converse
 - expansores de portas;
 - memórias EEPROM.
 
-# Maintainers 👷
+# 👷 Maintainers
 <table>
   <tr>
     <td align="center"><a href="https://www.linkedin.com/in/bruno-azambuja-carvalho/"><img src="https://media.licdn.com/dms/image/v2/D4D03AQHt5XskxdwHjA/profile-displayphoto-crop_800_800/B4DZiMM5gQHwAI-/0/1754698848898?e=1784764800&v=beta&t=SBDuhszs19jh4P5vdCfz1i-W1ZHMIxK1feSw_oZBl6E" width="100px;" alt="Bruno Carvalho"/><br /><sub><b>Bruno Carvalho</b></sub></a><br /></td>
