@@ -44,9 +44,7 @@ LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLS, LCD_ROWS);
 
 // ---------------- botao (troca de interface) ----------------
 const int BTN_PIN = 2;                 // outra perna no GND (INPUT_PULLUP)
-const unsigned long BTN_DEBOUNCE = 40;
 bool btnUltimoNivel = HIGH;
-unsigned long btnUltimoMs = 0;
 
 // ---------------- helpers de hex (compartilhados) ----------------
 void printHex2(byte v) {
@@ -355,6 +353,7 @@ void spiComando(String l) {
 // ================================================================
 //  LCD de display + botao
 // ================================================================
+
 void lcdMostrar(const String &cima, const String &baixo) {
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -372,9 +371,7 @@ void lcdComando(String p) {
 
 void lerBotao() {
   bool nivel = digitalRead(BTN_PIN);
-  if (nivel == LOW && btnUltimoNivel == HIGH &&
-      millis() - btnUltimoMs > BTN_DEBOUNCE) {
-    btnUltimoMs = millis();
+  if (nivel == LOW && btnUltimoNivel == HIGH) {   // borda de descida = apertou
     Serial.println("BTN");           // avisa o Python para trocar de interface
   }
   btnUltimoNivel = nivel;
