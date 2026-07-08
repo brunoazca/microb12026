@@ -11,7 +11,7 @@
  *     Arduino -> PC : CONN;0xNN | DISC;0xNN | RESP;... | OK;... | ERR;...
  *     Varre o barramento sozinho — apenas enquanto em modo I2C.
  *
- *   UART (ponte via Serial1, TX1 18 / RX1 19)
+ *   UART (ponte via Serial3, TX1 18 / RX1 19)
  *     PC -> Arduino : CFG|baud|timeout|modo|cmd | DETECT
  *                     SEND|modo|payload | LISTEN|ms | STOP
  *     Arduino -> PC : LOG:... | ERR:... | RX:hex | BAUD:OK/NADA/INCONCLUSIVO
@@ -177,7 +177,7 @@ void i2cComando(String l) {
 }
 
 // ================================================================
-//  UART (ponte Serial1)
+//  UART (ponte Serial3)
 // ================================================================
 long uartBaud = 9600;
 int  uartTimeout = 500;
@@ -198,19 +198,20 @@ void uartRX(uint8_t *buf, int n) {
 }
 
 void uartAbrir() {
-  if (uartAberta) Serial1.end();
-  Serial1.begin(uartBaud);
+  if (uartAberta) Serial3.end();
+  Serial3.begin(uartBaud);
   uartAberta = true;
-  uartLog("Serial1 aberta @ " + String(uartBaud));
+  uartLog("Serial3 aberta @ " + String(uartBaud));
 }
 
-void uartLimpar() { while (Serial1.available() > 0) Serial1.read(); }
+void uartLimpar() { while (Serial3.available() > 0) Serial3.read(); }
 
 void uartTexto(String t) {
   t.replace("<CR>", "\r");
   t.replace("<LF>", "\n");
-  Serial1.print(t);
+  Serial3.print(t);
 }
+
 
 bool uartHex(String h) {
   h.replace(" ", "");
@@ -219,7 +220,7 @@ bool uartHex(String h) {
     int hi = hexVal(h.charAt(i));
     int lo = hexVal(h.charAt(i + 1));
     if (hi < 0 || lo < 0) { uartErr("hex invalido"); return false; }
-    Serial1.write((uint8_t)(hi * 16 + lo));
+    Serial3.write((uint8_t)(hi * 16 + lo));
   }
   return true;
 }
@@ -230,8 +231,8 @@ void uartLerResposta(int &total, int &legiveis) {
   legiveis = 0;
   unsigned long ini = millis();
   while (millis() - ini < (unsigned long)uartTimeout) {
-    while (Serial1.available() > 0 && total < 256) {
-      uint8_t b = Serial1.read();
+    while (Serial3.available() > 0 && total < 256) {
+      uint8_t b = Serial3.read();
       buf[total++] = b;
       if ((b >= 0x20 && b <= 0x7E) || b == '\r' || b == '\n' || b == '\t') legiveis++;
     }
@@ -253,7 +254,7 @@ void uartCFG(String a) {
 }
 
 void uartDETECT() {
-  if (!uartAberta) { uartErr("Serial1 fechada (envie CFG antes)"); return; }
+  if (!uartAberta) { uartErr("Serial3 fechada (envie CFG antes)"); return; }
   uartLog("Detectando no baud " + String(uartBaud) + "...");
   uartLimpar();
   if (uartCmdBoot.length() > 0) {
@@ -275,7 +276,7 @@ void uartDETECT() {
 }
 
 void uartSEND(String a) {
-  if (!uartAberta) { uartErr("Serial1 fechada (envie CFG antes)"); return; }
+  if (!uartAberta) { uartErr("Serial3 fechada (envie CFG antes)"); return; }
   int p1 = a.indexOf('|');
   if (p1 < 0) { uartErr("SEND malformado"); return; }
   char modo = a.substring(0, p1).charAt(0);
@@ -289,15 +290,15 @@ void uartSEND(String a) {
 }
 
 void uartLISTEN(String a) {
-  if (!uartAberta) { uartErr("Serial1 fechada (envie CFG antes)"); return; }
+  if (!uartAberta) { uartErr("Serial3 fechada (envie CFG antes)"); return; }
   long ms = a.toInt();
   uartLog("Escutando por " + String(ms) + " ms...");
   uint8_t buf[256];
   int n = 0;
   unsigned long ini = millis();
   while (millis() - ini < (unsigned long)ms) {
-    while (Serial1.available() > 0) {
-      buf[n++] = Serial1.read();
+    while (Serial3.available() > 0) {
+      buf[n++] = Serial3.read();
       if (n >= 256) { uartRX(buf, n); n = 0; }
     }
   }
@@ -306,8 +307,8 @@ void uartLISTEN(String a) {
 }
 
 void uartSTOP() {
-  if (uartAberta) { Serial1.end(); uartAberta = false; }
-  uartLog("Serial1 fechada");
+  if (uartAberta) { Serial3.end(); uartAberta = false; }
+  uartLog("Serial3 fechada");
 }
 
 // ================================================================
@@ -476,7 +477,7 @@ void setup() {
 
   lcdMostrar("Pronto.", "Ligue o py");
 
-  // UART: Serial1 so e aberta quando chega um CFG
+  // UART: Serial3 so e aberta quando chega um CFG
   Serial.println("RDY");   // avisa o Python; ele responde com MODE|... e LCD:...
 }
 

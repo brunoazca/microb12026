@@ -1,10 +1,9 @@
 """Leitura e escrita do banco de componentes (JSON).
 
-Simples de proposito: cada barramento tem um arquivo em
+Cada barramento tem um arquivo em
 terminal/data/componentes_<barramento>.json, e o arquivo e apenas
 a lista de componentes:
 
-    [ {...}, {...} ]
 """
 
 import json
