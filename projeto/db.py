@@ -1,7 +1,7 @@
 """Leitura e escrita do banco de componentes (JSON).
 
 Cada barramento tem um arquivo em
-terminal/data/componentes_<barramento>.json, e o arquivo e apenas
+projeto/data/componentes_<barramento>.json, e o arquivo e apenas
 a lista de componentes:
 
 """
