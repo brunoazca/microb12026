@@ -112,6 +112,8 @@ Cada dispositivo possui um endereço próprio, permitindo que o Arduino converse
 
 O circuito completo (Arduino MEGA, botão de troca de interface, LCD I²C e os componentes de cada protocolo) pode ser visualizado e simulado no Wokwi:
 
+<img width="681" height="520" alt="Screenshot 2026-07-07 at 23 16 14" src="https://github.com/user-attachments/assets/8c9de2de-050e-49cd-8499-2ac09e8c08ef" />
+
 🔗 https://wokwi.com/projects/468898400251991041
 
 # 👷 Maintainers
